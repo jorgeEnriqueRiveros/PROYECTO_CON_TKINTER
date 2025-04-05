@@ -24,7 +24,7 @@ def cargar_imagen_fondo(ancho, alto):
     else:
         imagen = Image.new("RGB", (ancho, alto), color="gray")
         draw = ImageDraw.Draw(imagen)
-        draw.text((ancho // 2 - 50, alto // 2), "Logo no encontrado", fill="white")
+        draw.text((ancho//2 - 50, alto//2), "Logo no encontrado", fill="white")
     return ImageTk.PhotoImage(imagen)
 
 def mostrar_mensaje_custom(titulo, mensaje):
@@ -37,6 +37,7 @@ def mostrar_mensaje_custom(titulo, mensaje):
     mensaje_win.resizable(False, False)
     mensaje_win.configure(bg="#053A20")
     
+    # Centrar la ventana en la pantalla
     mensaje_win.update_idletasks()
     x = (mensaje_win.winfo_screenwidth() - 300) // 2
     y = (mensaje_win.winfo_screenheight() - 150) // 2
@@ -71,8 +72,10 @@ def crear_ventana_consulta(titulo="Consulta", ancho=600, alto=700):
 
 def registrar_cliente_gui():
     ventana, frame = crear_ventana_consulta("Registrar Cliente", 600, 700)
+    
     tk.Label(frame, text="Registrar Cliente", font=("Century Gothic", 16, "bold"),
              fg="white", bg="#053A20").pack(pady=10)
+    
     campos = ["Nombre:", "Apellido:", "Teléfono:", "Correo:", "Membresía:"]
     entries = {}
     for campo in campos:
@@ -101,17 +104,22 @@ def registrar_cliente_gui():
     
     tk.Button(frame, text="Guardar", font=("Century Gothic", 12, "bold"),
               bg="#157347", fg="white", command=guardar_cliente).pack(pady=10)
+    
+    # Botón para volver al menú
     tk.Button(frame, text="Volver al menú", font=("Century Gothic", 12, "bold"),
               bg="#157347", fg="white", command=ventana.destroy).pack(pady=10)
 
 def registrar_producto_gui():
     ventana, frame = crear_ventana_consulta("Registrar Producto", 600, 700)
+    
     tk.Label(frame, text="Registrar Producto", font=("Century Gothic", 16, "bold"),
              fg="white", bg="#053A20").pack(pady=10)
+    
     tk.Label(frame, text="Nombre del Producto:", font=("Century Gothic", 12, "bold"),
              fg="white", bg="#053A20").pack(pady=5)
     entry_nombre = tk.Entry(frame, font=("Century Gothic", 12))
     entry_nombre.pack(pady=5)
+    
     tk.Label(frame, text="Precio Unitario:", font=("Century Gothic", 12, "bold"),
              fg="white", bg="#053A20").pack(pady=5)
     entry_precio = tk.Entry(frame, font=("Century Gothic", 12))
@@ -137,34 +145,41 @@ def registrar_producto_gui():
     
     tk.Button(frame, text="Guardar", font=("Century Gothic", 12, "bold"),
               bg="#157347", fg="white", command=guardar_producto).pack(pady=10)
+    
     tk.Button(frame, text="Volver al menú", font=("Century Gothic", 12, "bold"),
               bg="#157347", fg="white", command=ventana.destroy).pack(pady=10)
 
 def realizar_compra_gui():
-    # Ventana más amplia para incorporar lista de productos
-    ventana, frame = crear_ventana_consulta("Realizar Compra", 650, 750)
+    ventana, frame = crear_ventana_consulta("Realizar Compra", 600, 700)
+    
     tk.Label(frame, text="Realizar Compra", font=("Century Gothic", 16, "bold"),
              fg="white", bg="#053A20").pack(pady=10)
+    
     tk.Label(frame, text="Correo del Cliente:", font=("Century Gothic", 12, "bold"),
              fg="white", bg="#053A20").pack(pady=5)
     entry_correo = tk.Entry(frame, font=("Century Gothic", 12))
     entry_correo.pack(pady=5)
+    
     tk.Label(frame, text="Forma de Pago:", font=("Century Gothic", 12, "bold"),
              fg="white", bg="#053A20").pack(pady=5)
     entry_pago = tk.Entry(frame, font=("Century Gothic", 12))
     entry_pago.pack(pady=5)
     
     productos = []
+    
     frame_producto = tk.Frame(frame, bg="#053A20")
     frame_producto.pack(pady=10)
+    
     tk.Label(frame_producto, text="ID Producto:", font=("Century Gothic", 12, "bold"),
              fg="white", bg="#053A20").grid(row=0, column=0, padx=5, pady=2)
     entry_id_producto = tk.Entry(frame_producto, font=("Century Gothic", 12))
     entry_id_producto.grid(row=0, column=1, padx=5, pady=2)
+    
     tk.Label(frame_producto, text="Cantidad:", font=("Century Gothic", 12, "bold"),
              fg="white", bg="#053A20").grid(row=1, column=0, padx=5, pady=2)
     entry_cantidad = tk.Entry(frame_producto, font=("Century Gothic", 12))
     entry_cantidad.grid(row=1, column=1, padx=5, pady=2)
+    
     tk.Label(frame_producto, text="Precio Unitario:", font=("Century Gothic", 12, "bold"),
              fg="white", bg="#053A20").grid(row=2, column=0, padx=5, pady=2)
     entry_precio = tk.Entry(frame_producto, font=("Century Gothic", 12))
@@ -187,14 +202,11 @@ def realizar_compra_gui():
         entry_cantidad.delete(0, tk.END)
         entry_precio.delete(0, tk.END)
     
-    frame_botones = tk.Frame(frame_producto, bg="#053A20")
+    frame_botones = tk.Frame(frame_producto)
     frame_botones.grid(row=3, column=0, columnspan=2, pady=10)
+    
     tk.Button(frame_botones, text="Agregar Producto", font=("Century Gothic", 12, "bold"),
-              bg="#157347", fg="white", command=agregar_producto).grid(row=0, column=0, padx=5)
-    tk.Button(frame_botones, text="Finalizar Compra", font=("Century Gothic", 12, "bold"),
-              bg="#157347", fg="white", command=lambda: finalizar_compra()).grid(row=0, column=1, padx=5)
-    tk.Button(frame_botones, text="Volver al menú", font=("Century Gothic", 12, "bold"),
-              bg="#157347", fg="white", command=ventana.destroy).grid(row=0, column=2, padx=5)
+              bg="#157347", fg="white", command=agregar_producto).pack(side=tk.LEFT, padx=5)
     
     def finalizar_compra():
         correo = entry_correo.get()
@@ -215,51 +227,24 @@ def realizar_compra_gui():
             ventana.destroy()
         except Exception as e:
             messagebox.showerror("Error", f"Error al registrar la compra:\n{e}")
-
-def ordenar_productos_gui():
-    # Ventana más ancha para visualizar bien los productos
-    ventana, frame = crear_ventana_consulta("Productos Más Vendidos", 700, 750)
-    tk.Label(frame, text="Productos Más Vendidos", font=("Century Gothic", 16, "bold"),
-             fg="white", bg="#053A20").pack(pady=10)
-    productos_text = tk.Text(frame, height=20, font=("Century Gothic", 12))
-    productos_text.pack(pady=10, fill="both", expand=True)
     
-    try:
-        conexion = Conexion.obtener_conexion()
-        with conexion.cursor() as cursor:
-            cursor.execute(
-                """
-                SELECT p.nombre_prodto, SUM(dc.cantidad) AS total_vendido
-                FROM detalles_compra dc
-                JOIN productos p ON p.id_producto = dc.id_producto
-                GROUP BY p.id_producto
-                ORDER BY total_vendido DESC
-                """
-            )
-            productos = cursor.fetchall()
-        conexion.close()
-        if productos:
-            for prod in productos:
-                productos_text.insert(tk.END, f"{prod[0]} - Cantidad Vendida: {prod[1]}\n")
-        else:
-            productos_text.insert(tk.END, "No hay datos de ventas.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Error al obtener productos vendidos:\n{e}")
+    tk.Button(frame_botones, text="Finalizar Compra", font=("Century Gothic", 12, "bold"),
+              bg="#157347", fg="white", command=finalizar_compra).pack(side=tk.LEFT, padx=5)
     
-    # Botón "Volver al menú" organizado en un frame a la derecha
-    frame_final = tk.Frame(frame, bg="#053A20")
-    frame_final.pack(pady=10, fill="x")
-    tk.Button(frame_final, text="Volver al menú", font=("Century Gothic", 12, "bold"),
-              bg="#157347", fg="white", command=ventana.destroy).pack(side="right", padx=5)
+    tk.Button(frame, text="Volver al menú", font=("Century Gothic", 12, "bold"),
+              bg="#157347", fg="white", command=ventana.destroy).pack(pady=10)
 
 def ver_info_cliente_gui():
     ventana, frame = crear_ventana_consulta("Ver Información del Cliente", 600, 700)
+    
     tk.Label(frame, text="Ver Información del Cliente", font=("Century Gothic", 16, "bold"),
              fg="white", bg="#053A20").pack(pady=10)
+    
     tk.Label(frame, text="Correo del Cliente:", font=("Century Gothic", 12, "bold"),
              fg="white", bg="#053A20").pack(pady=5)
     entry_correo = tk.Entry(frame, font=("Century Gothic", 12))
     entry_correo.pack(pady=5)
+    
     info_text = tk.Text(frame, height=10, font=("Century Gothic", 12))
     info_text.pack(pady=10, fill="both", expand=True)
     
@@ -274,17 +259,21 @@ def ver_info_cliente_gui():
     
     tk.Button(frame, text="Buscar", font=("Century Gothic", 12, "bold"),
               bg="#157347", fg="white", command=buscar_cliente).pack(pady=5)
+    
     tk.Button(frame, text="Volver al menú", font=("Century Gothic", 12, "bold"),
               bg="#157347", fg="white", command=ventana.destroy).pack(pady=10)
 
 def ver_compras_cliente_gui():
-    ventana, frame = crear_ventana_consulta("Ver Compras del Cliente", 650, 750)
+    ventana, frame = crear_ventana_consulta("Ver Compras del Cliente", 600, 700)
+    
     tk.Label(frame, text="Ver Compras del Cliente", font=("Century Gothic", 16, "bold"),
              fg="white", bg="#053A20").pack(pady=10)
+    
     tk.Label(frame, text="Correo del Cliente:", font=("Century Gothic", 12, "bold"),
              fg="white", bg="#053A20").pack(pady=5)
     entry_correo = tk.Entry(frame, font=("Century Gothic", 12))
     entry_correo.pack(pady=5)
+    
     compras_text = tk.Text(frame, height=15, font=("Century Gothic", 12))
     compras_text.pack(pady=10, fill="both", expand=True)
     
@@ -317,17 +306,21 @@ def ver_compras_cliente_gui():
     
     tk.Button(frame, text="Buscar Compras", font=("Century Gothic", 12, "bold"),
               bg="#157347", fg="white", command=buscar_compras).pack(pady=5)
+    
     tk.Button(frame, text="Volver al menú", font=("Century Gothic", 12, "bold"),
               bg="#157347", fg="white", command=ventana.destroy).pack(pady=10)
 
 def sumar_valor_compras_gui():
     ventana, frame = crear_ventana_consulta("Sumar Valor de Compras", 600, 700)
+    
     tk.Label(frame, text="Sumar Valor de Compras", font=("Century Gothic", 16, "bold"),
              fg="white", bg="#053A20").pack(pady=10)
+    
     tk.Label(frame, text="Correo del Cliente:", font=("Century Gothic", 12, "bold"),
              fg="white", bg="#053A20").pack(pady=5)
     entry_correo = tk.Entry(frame, font=("Century Gothic", 12))
     entry_correo.pack(pady=5)
+    
     resultado_label = tk.Label(frame, text="", font=("Century Gothic", 12, "bold"),
                                fg="white", bg="#053A20")
     resultado_label.pack(pady=10)
@@ -350,17 +343,55 @@ def sumar_valor_compras_gui():
     
     tk.Button(frame, text="Sumar Compras", font=("Century Gothic", 12, "bold"),
               bg="#157347", fg="white", command=sumar_compras).pack(pady=5)
+    
+    tk.Button(frame, text="Volver al menú", font=("Century Gothic", 12, "bold"),
+              bg="#157347", fg="white", command=ventana.destroy).pack(pady=10)
+
+def ordenar_productos_gui():
+    ventana, frame = crear_ventana_consulta("Productos Más Vendidos", 600, 700)
+    
+    tk.Label(frame, text="Productos Más Vendidos", font=("Century Gothic", 16, "bold"),
+             fg="white", bg="#053A20").pack(pady=10)
+    
+    productos_text = tk.Text(frame, height=20, font=("Century Gothic", 12))
+    productos_text.pack(pady=10, fill="both", expand=True)
+    
+    try:
+        conexion = Conexion.obtener_conexion()
+        with conexion.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT p.nombre_prodto, SUM(dc.cantidad) AS total_vendido
+                FROM detalles_compra dc
+                JOIN productos p ON p.id_producto = dc.id_producto
+                GROUP BY p.id_producto
+                ORDER BY total_vendido DESC
+                """
+            )
+            productos = cursor.fetchall()
+        conexion.close()
+        if productos:
+            for prod in productos:
+                productos_text.insert(tk.END, f"{prod[0]} - Cantidad Vendida: {prod[1]}\n")
+        else:
+            productos_text.insert(tk.END, "No hay datos de ventas.")
+    except Exception as e:
+        messagebox.showerror("Error", f"Error al obtener productos vendidos:\n{e}")
+    
     tk.Button(frame, text="Volver al menú", font=("Century Gothic", 12, "bold"),
               bg="#157347", fg="white", command=ventana.destroy).pack(pady=10)
 
 def buscar_cliente_gui():
     ventana, frame = crear_ventana_consulta("Buscar Cliente", 600, 700)
+    
     tk.Label(frame, text="Buscar Cliente", font=("Century Gothic", 16, "bold"),
              fg="white", bg="#053A20").pack(pady=10)
+    
     tk.Label(frame, text="Ingrese nombre o apellido:", font=("Century Gothic", 12, "bold"),
              fg="white", bg="#053A20").pack(pady=5)
     entry_busqueda = tk.Entry(frame, font=("Century Gothic", 12))
     entry_busqueda.pack(pady=5)
+    
     resultados_text = tk.Text(frame, height=15, font=("Century Gothic", 12))
     resultados_text.pack(pady=10, fill="both", expand=True)
     
@@ -370,6 +401,7 @@ def buscar_cliente_gui():
         if not criterio:
             messagebox.showerror("Error", "Ingrese un criterio de búsqueda")
             return
+        # Se asume que Cliente tiene el método obtener_cliente_por_nombre_o_apellido
         resultados = Cliente.obtener_cliente_por_nombre_o_apellido(criterio)
         if resultados:
             for cliente in resultados:
@@ -379,6 +411,7 @@ def buscar_cliente_gui():
     
     tk.Button(frame, text="Buscar", font=("Century Gothic", 12, "bold"),
               bg="#157347", fg="white", command=realizar_busqueda).pack(pady=5)
+    
     tk.Button(frame, text="Volver al menú", font=("Century Gothic", 12, "bold"),
               bg="#157347", fg="white", command=ventana.destroy).pack(pady=10)
 
